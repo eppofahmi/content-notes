@@ -1,41 +1,44 @@
 ---
-title: "Impor data ke R"
+title: "Membaca berbagai data menggunakan R"
 author: "Ujang Fahmi"
-date: "5/25/2021"
 output:
-  html_notebook:
-    theme: united
-    toc: true
-    toc_float: true
-    toc_depth: 2
-    number_sections: true
+  html_document:
+    toc: yes
+    toc_depth: '2'
+    df_print: paged
+    number_sections: yes
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ```
 
+```{r klippy, echo=FALSE, include=TRUE}
+klippy::klippy('')
+klippy::klippy(position = c('top', 'right'))
+```
+
 Membaca data menjadi salah satu hal pertama dan utama dalam proses pengolahan data. Di R kita bisa mengimpor hampir semua jenis data. Berikut ini adalah beberapa cara impor dan ekspor data yang umum di R. 
+
+> Data yang digunakan dalam tutorial ini bisa didapat dari tautan https://github.com/eppofahmi/tutorial-notes/tree/main/data. 
 
 # Impor Data
 ## Membaca file csv
 
 Untuk membaca file `csv` atau comma separated value kita bisa menggunakan paling tidak dua fungsi, yaitu `read.csv()` yang merupakan fungsi dasar atau `readr::read_csv()` dari `readr` yang juga merupakan bagian dari tidyverse. 
 
-```{r csv1, eval=FALSE}
-read.csv(file = "nama folder/nama file.csv", header = TRUE, sep = ",")
-readr::read_csv(file = "nama folder/nama file.csv", col_names = TRUE)
-```
+> 1. read.csv(file = "nama folder/nama file.csv", header = TRUE, sep = ",")
+2. readr::read_csv(file = "nama folder/nama file.csv", col_names = TRUE)
 
 Berikut adalah contoh dasar penggunaannya, dimana yang dibutuhkan adalah kita tahu nama folder, dan nama datanya, hingga bisa ditulis sebagai berikut.
 
-```{r csv2}
+```{r csv2, message=FALSE, warning=FALSE}
 library(tidyverse)
 
 df1 = read.csv(file = "data/sample_file.csv")
 # glimpse(df1)
 df2 = read_csv(file = "data/sample_file.csv")
-# glimpse(df2)
+head(df2)
 ```
 
 Itu adalah contoh dasar, kita juga bisa menggunakan parameter lainnya pada saat membaca file `csv`. Misalnya separator yang digunakan secara *default* adalah koma `,`. Tapi kita juga bisa menggunakan separator lain misalnya titik koma `;` atau `|`. Selain itu, jika data kita cukup banyak dan hanya ingin mengambil sebagian data saja, kita bisa membatasi jumlah baris dengan parameter `n_max = 100`, angka 100 bisa diganti dengan angka yang diinginkan.
@@ -44,16 +47,77 @@ Untuk mengetahui parameter lain yang bisa disertakan dalam `read_csv` atau `read
 
 ## Membaca file excel
 
+File excel bisa berekstensi .xls atau xlsx salah satunya bisa diimpor dengan menggunakan fungsi dari packahe `readxl`. Untuk itu, sebelum melakukannya kita perlu terlebih dahulu menginstall packagenya dengan menggunakan skrip berikut. 
+
+```{r installreadxl, eval=FALSE}
+install.packages("readxl")
+```
+
+Fungsi utama dari package `readxl` yang akan digunakan adalah `read_xlsx`. Di sini saya menggunakan awalan `readxl::` sebelum fungsinya untuk memastikan fungsi tersebut diambil dari package `readxl`. 
+
+> readxl::read_xlsx(path = "nama folder/nama file.xlsx", sheet = "nomor/nama sheet")
+
+Argumen yang dibutuhkan kurang lebih sama dengan pembacaan file csv, yaitu nama folder, nama file dan ditambah nama atau nomor sheet. Karena excel bisa menampung beberapa sheet sekaligus dalam 1 file. 
+
+```{r, eval=FALSE}
+library(readxl)
+
+df3 = read_xlsx(path = "data/sampelfile.xlsx", sheet = 1)
+head(df3)
+```
+
+Contoh di atas digunakan untuk mebaca file per sheet di excel. Jika kita memiliki lebih dari 1 sheet hal tersebut bisa dilakukan berulangkali, atau juga bisa menggunakan `loop/perulangan` yang tutorialnya bisa diikuti [di sini](www.sadasa.id/blog/tutorial-loop). 
+
 ## Membaca file txt
+
+File txt atau file dengan separator tertentu bisa dibaca menggunakan fungsi `read.table`. Berikut adalah contoh menggunakan data yang sama dan dengan separator `;`. 
+
+```{r}
+df4 = read.table(file = "data/sampelfile.txt", header = TRUE, sep = ";")
+head(df4)
+```
+Seperti sebelumnya untuk mengetahui parameter atau argumen lain yang bisa digunakan pada saat membaca file txt bisa menggunakan fungsu `?read.table`. 
 
 ## Membaca file json
 
-## Membaca file output spss
+File `json` atau java script object notation merupakan salah satu format umum yang banyak digunakan untuk menampung data saat ini. Salah satu package yang bisa digunakan untuk membaca file json di R adalah `jsonlite`. 
 
-## Membaca file output stata
+```{r}
+library(jsonlite)
+df5 = jsonlite::fromJSON(txt = "data/samplefile.json", flatten = TRUE)
+head(df5)
+```
+Fungsi `jsonlite::fromJSON` memiliki beberapa argumen lain yang bisa digunakan seperti fungsi lainnya. Contoh diatas digunakan untuk langsung mengkonversi json menjadi data frame atau tabel yang sudah sangat biasa kita lihat. 
 
-# Ekspor
-## Simpan file csv
-## Simpan file excel
-## Simpan file txt
-## Simpan file json
+## Membaca file spss
+
+SPSS merupakan salah satu aplikasi yang paling banyak digunakan untuk pengolahan data. Output file yang dihasilkan biasanya berekstensi `.sav`. Di R, kita juga bisa mengimpor atau membaca file dengan ekstensi tersebut menggunakan package `haven`. 
+
+```{r}
+library(haven)
+
+df6 = haven::read_sav(file = "data/samplefile.sav")
+head(df6)
+```
+Package `haven` memiliki banyak fungsi yang bisa digunakan untuk membaca dan menangani file output dari berbagai aplikasi. Untuk itu sangat disarankan untuk membaca dokumentasinya dengan menggunakan `?haven` atau ke laman pembuatanya yang juga merupakan bagian dari tidyverse [di sini](https://haven.tidyverse.org/). 
+
+## Membaca file stata dan sas
+
+Sama seperti membaca file `sav` kita juga bisa menggunakan fungsi-fungsi dari `haven` untuk bisa mengimpor file dari stata dan sas, yang masing-masing umumnya memiliki ekstensi `.sas7bdat` dan `.dta`. 
+
+Untuk membaca file dari stata kita bisa menggunakan skrip contoh berikut. 
+
+```{r stata}
+df7 = haven::read_dta(file = "data/samplefile.dta")
+head(df7)
+```
+
+Sementara untuk membaca file dari sas, kita bisa menggunakan skrip berikut: 
+
+```{r}
+df8 = haven::read_sas(data_file = "data/samplefile.sas7bdat")
+head(df8)
+```
+Demikianlah berbagai cara untuk mengimpor atau membaca file dengan R. Tentu masih banyak file lain yang bisa dibaca, misalnya file `nc` dan bahkan R juga bisa membaca file berupa gambar. Hal tersebut akan kita bahas dalam tutorial lain. 
+
+Jika ada diantara anda yang butuh mengetahui berbagai cara untuk menyimpan file dari `R` kedalam berbagai format file bisa mengikuti [tutorial ini](tutorial-ekspor-data). 

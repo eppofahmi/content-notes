@@ -1,0 +1,26 @@
+---
+title: "Menyimpan file dari dalam berbagai format"
+author: "Ujang Fahmi"
+output:
+  html_document:
+    toc: yes
+    toc_depth: '2'
+    df_print: paged
+    number_sections: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+```{r klippy, echo=FALSE, include=TRUE}
+klippy::klippy('')
+klippy::klippy(position = c('top', 'right'))
+```
+
+# Ekspor
+## Simpan file csv
+## Simpan file excel
+## Simpan file txt
+## Simpan file json
+## Simpan file spss, sas, stata
