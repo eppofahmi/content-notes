@@ -1,0 +1,59 @@
+---
+title: "Impor data ke R"
+author: "Ujang Fahmi"
+date: "5/25/2021"
+output:
+  html_notebook:
+    theme: united
+    toc: true
+    toc_float: true
+    toc_depth: 2
+    number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+Membaca data menjadi salah satu hal pertama dan utama dalam proses pengolahan data. Di R kita bisa mengimpor hampir semua jenis data. Berikut ini adalah beberapa cara impor dan ekspor data yang umum di R. 
+
+# Impor Data
+## Membaca file csv
+
+Untuk membaca file `csv` atau comma separated value kita bisa menggunakan paling tidak dua fungsi, yaitu `read.csv()` yang merupakan fungsi dasar atau `readr::read_csv()` dari `readr` yang juga merupakan bagian dari tidyverse. 
+
+```{r csv1, eval=FALSE}
+read.csv(file = "nama folder/nama file.csv", header = TRUE, sep = ",")
+readr::read_csv(file = "nama folder/nama file.csv", col_names = TRUE)
+```
+
+Berikut adalah contoh dasar penggunaannya, dimana yang dibutuhkan adalah kita tahu nama folder, dan nama datanya, hingga bisa ditulis sebagai berikut.
+
+```{r csv2}
+library(tidyverse)
+
+df1 = read.csv(file = "data/sample_file.csv")
+# glimpse(df1)
+df2 = read_csv(file = "data/sample_file.csv")
+# glimpse(df2)
+```
+
+Itu adalah contoh dasar, kita juga bisa menggunakan parameter lainnya pada saat membaca file `csv`. Misalnya separator yang digunakan secara *default* adalah koma `,`. Tapi kita juga bisa menggunakan separator lain misalnya titik koma `;` atau `|`. Selain itu, jika data kita cukup banyak dan hanya ingin mengambil sebagian data saja, kita bisa membatasi jumlah baris dengan parameter `n_max = 100`, angka 100 bisa diganti dengan angka yang diinginkan.
+
+Untuk mengetahui parameter lain yang bisa disertakan dalam `read_csv` atau `read.csv` atau fungsi lainnya, kita bisa menggunakan tanda tanya `?` diikuti dengan nama fungsinya. Misalnya, `?read_csv` atau ?`read.csv`.
+
+## Membaca file excel
+
+## Membaca file txt
+
+## Membaca file json
+
+## Membaca file output spss
+
+## Membaca file output stata
+
+# Ekspor
+## Simpan file csv
+## Simpan file excel
+## Simpan file txt
+## Simpan file json
