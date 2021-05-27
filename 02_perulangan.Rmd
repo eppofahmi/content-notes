@@ -1,35 +1,105 @@
 ---
-title: "Membuat perulanan atau loop di R"
+title: "Membuat perulangan (Loop) di R"
 author: "Ujang Fahmi"
 output:
-  html_notebook:
-    theme: united
-    toc: true
-    toc_float: true
-    toc_depth: 2
-    number_sections: true
+  html_document:
+    toc: yes
+    toc_depth: '2'
+    df_print: paged
+    number_sections: yes
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r klippy, echo=FALSE, include=TRUE}
+klippy::klippy('')
+klippy::klippy(position = c('top', 'right'))
 ```
 
-## Including Plots
+Loop atau perulangan dapat dikatakan sebagai salah satu spesialisasi komputer yang menjadikannya alat untuk menggantikan manusia dalam hal pekerjaan yang monoton. Loop di R, bisa dilakukan untuk berbagai macam tujuan, selama tujuan tersebut sama dan harus dikerjakan berulang kali. 
 
-You can also embed plots, for example:
+Misalnya, mengkopi dan paste dari sebuah posisi data yang sama pada posisi yang sama lainnya. Contoh lain misalnya anda memiliki sebuah file excel dengan beberapa sheet didalamnya. R hanya bisa membaca per sheet, sementara kita ingin mengimpor semuanya, maka loop menjadi salah satu solusi untuk melakukannya. 
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+Loop bisa dilakukan dengan pola seperti berikut: 
+
+```{r, eval=FALSE}
+for (val in sequence) {
+  statement
+}
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Di sini `sequence` adalah sebuah vector dan `val` mengambil 1 per 1 dari nilai dalam vector `sequence`. Misalnya kita punya `sequence` dari 1 sampai 10, dan val yang dinyatakan/ditulis sebagai `i`. Maka i adalah 1, 2, 3 dan seterusnya sampai dengan 10. Untuk mendapatkan kasus nyata coba perhatikan contoh berikut. 
+
+# Basic Loop
+
+```{r}
+x <- c(2,5,3,9,8,11,6)
+count = 0
+for (val in x) {
+  if(val %% 2 == 0)
+    count = count+1
+}
+
+print(count)
+```
+
+Pada contoh di atas, loop mengulang sebanyak 7 kali, sesuai dengan jumlah elemen yang ada dalam objek `x`. Pada tiap perulangannya, `val` mengambil nilai yang seuai dengan urutannya dari objex x. misal val 1, maka elemen x yang diambil adalah 2. Di sini kita menggunakan modulo untuk mengetahui apakah nilai tersebut genap atau ganjil. Jika genap, kita menambah objek `count` dengan 1, hingga hasilnya adalah jumlah nilai genap yang ada didalam objek `x`, yaitu 3. 
+
+# Nested Loop
+
+Terkadang kita perlu melakukan dua kali perulangan untuk sebuah kasus dalam 1 operasi. Misalnya seperti contoh berikut, dimana kita memiliki matriks yang masih kosong, dan akan diisi dengan perkalian antara nomor baris dengan nomor kolom. Oleh karena itu, kita perlu menggunakan nested loop sebagai berikut. 
+
+```{r}
+# matriks 30 x 30 yang masih kosong
+mymat <- matrix(nrow=30, ncol=30)
+
+# masukan nilai pada setiap baris dan kolom dengan hasil perkalian keduanya
+for(i in 1:dim(mymat)[1]) {
+  # print(i)
+  for(j in 1:dim(mymat)[2]) {
+    # print(j)
+    mymat[i,j] = i*j
+  }
+}
+
+# melihat isi matriksnya
+mymat[1:10, 1:10]
+```
+
+Pada skrip diatas kita memiliki dua loop `i` dan `j`, dimana i digunakan untuk mengindeks baris dan j digunakan untuk mengindek kolom. Segelumnya, kita telah membuat matriks 30 x 30 yang belum ada isinya. Dengan loop ini kemudian kita mengisi masing-masing barisnya dengan perkalian antara i dan j. 
+
+Sehingga ketika i = 1 dan j = 1, dapat diartikan baris ke 1 kolom ke 1, maka isinya adalah 1 x 1 = 1. Sementara pada saat i = 2 dan j = 2, maka baris yang akan diisi adalah baris ke dua dan kolom ke dua, yaitu 2 x 2 = 4 dan seterusnya. 
+
+# `break` dan `next` dalam Loop
+
+Secara naturalnya loop akan berhenti jika semua `sequence` sudah habis. Namun di R kita juga bisa menggunakan beberapa parameter untuk menghentikan loop dengan kondisi tertentu.
+
+```{r}
+x = 1:10
+
+for (i in seq_along(1:length(x))) {
+  print(i)
+  if(i == 5){
+    print("selesai")
+    break
+  }
+}
+```
+
+Skrip di atas seharunya melakukan perulangan dari 1 sampai 10, namun karena kita menyertakan statemen jika i sama dengan 5, makan print selesai dan kemudian `break` atau berhenti, perulangan tersebut berhenti sampai vector ke 5 saja. 
+
+Selain `break` kita juga bisa menggunakan `next`. Parameter `next` digunakan untuk melanjutkan pada sebuah kondisi tertentu. Misalnya dalam vector dari 1 sampai 10, kita hanya akan mencetak (`print`) angka ganjil saja, maka hal tersebut bisa dicapai menggunakan skrip berikut. 
+
+```{r, eval=FALSE}
+m = 10
+
+for (k in 1:m){
+  if (!k %% 2)
+    next
+    print(k)
+}
+```
+
+Pada skrip diatas kita melakukan perulangan sebanyak 10 kali dengan vector 1 sampai 10. Lalu didalam loop kita sertakan kondisi jika k dibagi 2 tidak sama dengan 0 (`!k %% 2`) kita print `k` - nya. Jika kondisi tersebut tidak terpenuhi kita lanjut dengan `next` vector. 
