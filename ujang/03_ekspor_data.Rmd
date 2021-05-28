@@ -19,6 +19,9 @@ klippy::klippy(position = c('top', 'right'))
 ```
 
 # Ekspor
+
+Ekspor atau menyimpan data bisanya dilakukan setelah kita melakukan manipulasi data atau melakukan analisis. 
+
 ## Simpan file csv
 ## Simpan file excel
 ## Simpan file txt
